@@ -2,21 +2,22 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
-export class Client {
+export class Clients {
   @PrimaryGeneratedColumn()
   id: number;
-  
+
   @Column()
   name: string;
 
   @Column({ nullable: true })
-  email: string;
+  company: string;
 
-  @Column('datetime', { default: () => 'NOW()' })
+  @Column({ nullable: true })
+  wage: string;
+
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
   created_at: string;
 
-  @ManyToOne(() => User, (user) => user.clients, {
-    cascade: true,
-  })
+  @ManyToOne(() => User, (user) => user.clients, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   user: User;
 }

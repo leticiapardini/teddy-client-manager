@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users.module';
+import { ClientsModule } from './modules/clients.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -14,9 +15,11 @@ import { UsersModule } from './modules/users.module';
     database: 'postgres',
     //entities: [],
     synchronize: true,
+    migrations: [__dirname + '/../migrations/*{.ts,.js}'],
     autoLoadEntities: true,
   }),
-UsersModule],
+UsersModule,
+ClientsModule],
   controllers: [AppController],
   providers: [AppService],
 })

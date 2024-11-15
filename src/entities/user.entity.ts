@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Client } from './clients.entity';
+import { Clients } from './clients.entity';
 
 @Entity()
 export class User {
@@ -9,9 +9,9 @@ export class User {
   @Column()
   password: string;
 
-  @Column('datetime', { default: () => 'NOW()' })
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
   created_at: string;
-  
-  @OneToMany(() => Client, (client) => client.user)
-  clients: Client[];
+
+  @OneToMany(() => Clients, (client) => client.user)
+  clients: Clients[];
 }
