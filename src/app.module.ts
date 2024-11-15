@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users.module';
 import { ClientsModule } from './modules/clients.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -19,7 +20,8 @@ import { ClientsModule } from './modules/clients.module';
     autoLoadEntities: true,
   }),
 UsersModule,
-ClientsModule],
+ClientsModule,
+AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

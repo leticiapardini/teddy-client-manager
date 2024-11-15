@@ -1,13 +1,36 @@
-import { Controller, Get } from '@nestjs/common';
-import { User } from '../entities/user.entity';
-import { UsersService } from '../services/user.service';
+import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { ClientsService } from '../services/clients.service';
+import { Clients } from '../entities/clients.entity';
 
-@Controller()
-export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+@Controller('clients')
+export class ClientsController {
+  constructor(private readonly clientsService: ClientsService) {}
+
+  @Post()
+  async create(@Body() clientData: Partial<Clients>): Promise<Clients> {
+    return this.clientsService.create(clientData);
+  }
 
   @Get()
-  getHello(): Promise<User[]> {
-    return this.userService.findAll();
+  async findAll(): Promise<Clients[]> {
+    return this.clientsService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number): Promise<Clients> {
+    return this.clientsService.findOne(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() clientData: Partial<Clients>,
+  ): Promise<Clients> {
+    return this.clientsService.update(id, clientData);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: number): Promise<void> {
+    return this.clientsService.remove(id);
   }
 }
