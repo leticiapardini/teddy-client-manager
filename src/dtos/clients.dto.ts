@@ -1,41 +1,45 @@
-import { IsString, IsNotEmpty, MinLength, IsOptional, IsInt, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min, IsNumber } from 'class-validator'
 
 export class PaginationDto {
   @IsOptional()
   @IsInt()
   @Min(1)
-  page?: number;
+  page?: number
 
   @IsOptional()
   @IsInt()
   @Min(1)
-  limit?: number;
+  limit?: number
 }
 
 export class UpdateClientDto {
   @IsOptional()
   @IsString()
-  name?: string;
+  name?: string
 
   @IsOptional()
   @IsString()
-  company?: string;
+  company?: string
 
   @IsOptional()
   @IsString()
-  wage?: string;
+  wage?: string
 }
 
 export class CreateClientDto {
   @IsNotEmpty()
-  name: string;
-
-  @IsOptional()
-  company?: string;
-
-  @IsOptional()
-  wage?: string;
+  @IsString()
+  name: string
 
   @IsNotEmpty()
-  userId: number;
+  @IsString()
+  company?: string
+
+  @IsNotEmpty()
+  @IsString()
+  wage?: string
+
+  @IsNotEmpty()
+  @IsNumber()
+  userId: number
 }

@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { User } from './user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm'
+import { User } from './user.entity'
 
 @Entity()
 export class Clients {
@@ -19,5 +19,6 @@ export class Clients {
   created_at: string
 
   @ManyToOne(() => User, (user) => user.clients, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
   user: User
 }

@@ -1,8 +1,9 @@
-import { Body, ConflictException, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
-import { User } from '../entities/user.entity';
-import { UsersService } from '../services/user.service';
-import { UsersDto } from '../dtos/users.dto';
-import { Response } from 'express';
+import { Body, ConflictException, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common'
+import { User } from '../entities/user.entity'
+import { UsersService } from '../services/user.service'
+import { UsersDto } from '../dtos/users.dto'
+import { Response } from 'express'
+import { ERROR_MESSAGES } from '../constants/message.constants'
 
 @Controller('users')
 export class UsersController {
@@ -10,7 +11,7 @@ export class UsersController {
 
   @Get()
   getAllUser(): Promise<User[]> {
-    return this.userService.findAll();
+    return this.userService.findAll()
   }
 
   @Get(':username')
@@ -27,7 +28,7 @@ export class UsersController {
       if (error instanceof ConflictException) {
         return response.status(HttpStatus.CONFLICT).json({ message: error.message })
       }
-      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Erro inesperado' })
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.UNEXPECTED_ERROR })
     }
   }
 }
