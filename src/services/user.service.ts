@@ -1,5 +1,5 @@
 import { UsersDto } from './../dtos/users.dto';
-import { HttpStatus, Injectable, Res } from '@nestjs/common';
+import { ConflictException, HttpStatus, Injectable, Res } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
@@ -21,28 +21,22 @@ export class UsersService {
     return this.usersRepository.findOneBy({ username });
   }
 
-  async createUser(newUser: UsersDto, response: Response) {
-    try {
-      const { username, password } = newUser;
-      const user = await this.usersRepository.findOne({
-        where: { username: username.trim().toLowerCase() },
-      });
-      if (user !== null) {
-        console.log(user, 'user');
-        response.status(HttpStatus.BAD_REQUEST).json({ message: 'Usuário já existe' });
-      }
-      const saltOrRounds = 10;
-      const hash = await bcrypt.hash(password, saltOrRounds);
-      if (hash) {
-        await this.usersRepository.save({
-          username: username.trim().toLowerCase(),
-          password: hash,
-        });
-        return response.status(HttpStatus.CREATED).json({ username });
-      }
-    } catch (error) {
-      return response.status(HttpStatus.EXPECTATION_FAILED).json(error);
+  async create(newUser: UsersDto): Promise<User> {
+    const existingUser = await this.usersRepository.findOne({
+      where: { username: newUser.username.trim().toLowerCase() },
+    });
+    if (existingUser) {
+      throw new ConflictException('Usuário já existe');
     }
+  
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(newUser.password, saltOrRounds);
+  
+    const user = this.usersRepository.create({
+      username: newUser.username.trim().toLowerCase(),
+      password: hashedPassword,
+    });
+    return this.usersRepository.save(user);
   }
 
   async validateUser(username: string, password: string): Promise<User | null> {

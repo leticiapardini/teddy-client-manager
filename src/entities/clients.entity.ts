@@ -4,20 +4,20 @@ import { User } from './user.entity';
 @Entity()
 export class Clients {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
-  @Column()
-  name: string;
-
-  @Column({ nullable: true })
-  company: string;
+  @Column({ unique: true })
+  name: string
 
   @Column({ nullable: true })
-  wage: string;
+  company: string
+
+  @Column({ nullable: true })
+  wage: string
 
   @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
-  created_at: string;
+  created_at: string
 
   @ManyToOne(() => User, (user) => user.clients, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  user: User;
+  user: User
 }

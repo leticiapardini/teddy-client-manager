@@ -1,21 +1,30 @@
 import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
-import { UsersService } from '../services/user.service';
+import { JwtService } from '@nestjs/jwt';
 import { UsersDto } from '../dtos/users.dto';
+import { UsersService } from '../services/user.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post('/login')
   async login(@Body() body: UsersDto) {
-    const { username, password } = body;
-    
+    const { username, password } = body
     const user = await this.userService.validateUser(username, password);
-    
     if (!user) {
-      throw new HttpException('Credenciais inválidas', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        { message: 'Credenciais inválidas' },
+        HttpStatus.UNAUTHORIZED,
+      )
     }
-    
-    return { message: 'Login bem-sucedido', username }; // padronizar retorno
+    const payload = { username: user.username, sub: user.id }
+    const token = this.jwtService.sign(payload);
+    return {
+      message: 'Login bem-sucedido',
+      data: { username: user.username, token },
+    }
   }
 }
